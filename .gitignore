@@ -1,6 +1,6 @@
-/pollApp/__pycache__
-/polls/__pycache__
-/polls/migrations/__pycache__
+/pollApp/__pycache__/
+/polls/__pycache__/
+/polls/migrations/__pycache__/
 
 # secrets
 pollApp/settings.py
