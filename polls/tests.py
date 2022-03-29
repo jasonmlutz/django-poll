@@ -49,6 +49,21 @@ class QuestionModelTests(TestCase):
         self.assertContains(response, 'No polls are available.')
         self.assertQuerysetEqual(response.context['latest_question_list'], [])
 
+    def test_future_question_and_past_question(self):
+        """
+        Even if both past and future questions exist, only past questions
+        are displayed.
+        """
+        past_question = create_question(
+            question_text="Past question", days=-30)
+        future_question = create_question(
+            question_text="Future question", days=30)
+        response = self.client.get(reverse('polls:index'))
+        self.assertQuerysetEqual(
+            response.context['latest_question_list'],
+            [past_question]
+        )
+
     def test_was_published_recently_with_future_question(self):
         """
         was_published_recently() returns False for questions whose pub_date
