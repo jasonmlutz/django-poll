@@ -1,4 +1,5 @@
 import datetime
+from zipapp import create_archive
 
 from django.test import TestCase
 from django.utils import timezone
@@ -28,6 +29,16 @@ class QuestionModelTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "No polls are available.")
         self.assertQuerysetEqual(response.context['latest_question_list'], [])
+
+    def test_past_questions(self):
+        """
+        Questions with a pub_date in the past are displayed on the index page.
+        """
+        question = create_question(question_text='Past question.', days=-30)
+        response = self.client.get(reverse('polls:index'))
+        self.assertQuerysetEqual(
+            response.context['latest_question_list'], [question]
+        )
 
     def test_was_published_recently_with_future_question(self):
         """
