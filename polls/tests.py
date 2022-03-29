@@ -64,6 +64,21 @@ class QuestionModelTests(TestCase):
             [past_question]
         )
 
+    def test_two_past_questions(self):
+        """
+        The questions index page may display multiple questions,
+        with newer questions coming first.
+        """
+        older_question = create_question(
+            question_text="Past question 1.", days=-30)
+        old_question = create_question(
+            question_text="Past question 2.", days=-5)
+        response = self.client.get(reverse('polls:index'))
+        self.assertQuerysetEqual(
+            response.context['latest_question_list'],
+            [old_question, older_question]
+        )
+
     def test_was_published_recently_with_future_question(self):
         """
         was_published_recently() returns False for questions whose pub_date
